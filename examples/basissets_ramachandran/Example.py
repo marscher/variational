@@ -19,7 +19,7 @@ import numpy as np
 #Use of the function RamachandranBasis
 
 from variational.basissets.ramachandran import RamachandranBasis
-alabasis = RamachandranBasis('A', radiants=False) #load the residue centered basis 
+alabasis = RamachandranBasis('A', radians=False) #load the residue centered basis
                                                  #function for residue Alanine and
                                                  #default force field (ff_AMBER99SB_ILDN)
                                                  #three eigenvectors are considered (order=2)
@@ -34,7 +34,7 @@ print ala_basis_traj[0:10, :] #first 10 timesteps only
 
 # 1: Different number excitations
 from variational.basissets.ramachandran import RamachandranProductBasis
-FGAILbasis=RamachandranProductBasis('FGAIL', n_excite=3, radiants=False) #load the residue centered basis 
+FGAILbasis=RamachandranProductBasis('FGAIL', n_excite=3, radians=False) #load the residue centered basis
                                                                          #functions for residues F-G-A-I-L and
                                                                          #default force field (ff_AMBER99SB_ILDN)
                                                                          #three eigenvectors are considered (order=2)
@@ -47,7 +47,7 @@ print FGAIL_basis_set_list
 print FGAIL_basis_set_traj[0:10,:] #first 10 timesteps only
 
 # 2: Select only residues FG
-FGbasis=RamachandranProductBasis('FGAIL',include_res=[True,True,False,False,False], radiants=False) #load the residue centered basis 
+FGbasis=RamachandranProductBasis('FGAIL',include_res=[True,True,False,False,False], radians=False) #load the residue centered basis
                                                                                                     #functions for residues F-G and
                                                                                                     #default force field (ff_AMBER99SB_ILDN)
                                                                                                     #three eigenvectors are considered (order=2)
