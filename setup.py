@@ -123,15 +123,10 @@ def find_package_data(data_root, package_root):
 ################################################################################
 
 def extensions(path_prefix='./', python_prefix='', cythonize_exts=True):
-    print("path prefix: ", path_prefix)
-    print("python_prefix", python_prefix)
-    #ext_path_prefix = path_prefix + python_prefix
-    #print("ext_path_prefix", ext_path_prefix)
     from numpy import get_include as np_inc
     from scipy import get_include as sc_inc
     np_inc = np_inc()
     sc_inc = sc_inc()
-    from Cython.Build import cythonize
     exts = [Extension(python_prefix + 'variational.estimators.covar_c.covartools',
                       sources=[os.path.join(path_prefix, 'estimators/covar_c/covartools.pyx'),
                                os.path.join(path_prefix, 'estimators/covar_c/_covartools.c')],
@@ -143,6 +138,7 @@ def extensions(path_prefix='./', python_prefix='', cythonize_exts=True):
                       extra_compile_args=['-std=c99', '-O3'])
             ]
     if cythonize_exts:
+        from Cython.Build import cythonize
         return cythonize(exts)
     return exts
 
