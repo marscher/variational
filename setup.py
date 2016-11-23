@@ -122,8 +122,11 @@ def find_package_data(data_root, package_root):
 # EXTENSIONS
 ################################################################################
 
-def extensions(path_prefix='./', python_prefix=''):
+def extensions(path_prefix='./', python_prefix='', cythonize_exts=True):
+    print("path prefix: ", path_prefix)
+    print("python_prefix", python_prefix)
     ext_path_prefix = path_prefix + python_prefix
+    print("ext_path_prefix", ext_path_prefix)
     from numpy import get_include as np_inc
     from scipy import get_include as sc_inc
     np_inc = np_inc()
@@ -139,7 +142,9 @@ def extensions(path_prefix='./', python_prefix=''):
                       include_dirs=[ext_path_prefix + '/solvers/eig_qr/', np_inc, sc_inc],
                       extra_compile_args=['-std=c99', '-O3'])
             ]
-    return cythonize(exts)
+    if cythonize_exts:
+        return cythonize(exts)
+    return exts
 
 
 class lazy_cythonize(list):
