@@ -125,21 +125,21 @@ def find_package_data(data_root, package_root):
 def extensions(path_prefix='./', python_prefix='', cythonize_exts=True):
     print("path prefix: ", path_prefix)
     print("python_prefix", python_prefix)
-    ext_path_prefix = path_prefix + python_prefix
-    print("ext_path_prefix", ext_path_prefix)
+    #ext_path_prefix = path_prefix + python_prefix
+    #print("ext_path_prefix", ext_path_prefix)
     from numpy import get_include as np_inc
     from scipy import get_include as sc_inc
     np_inc = np_inc()
     sc_inc = sc_inc()
     from Cython.Build import cythonize
     exts = [Extension(python_prefix + 'variational.estimators.covar_c.covartools',
-                      sources=[ext_path_prefix + '/estimators/covar_c/covartools.pyx',
-                               ext_path_prefix + 'estimators/covar_c/_covartools.c'],
-                      include_dirs=[ext_path_prefix+'/estimators/covar_c/', np_inc],
+                      sources=[path_prefix + '/estimators/covar_c/covartools.pyx',
+                               path_prefix + 'estimators/covar_c/_covartools.c'],
+                      include_dirs=[path_prefix+'/estimators/covar_c/', np_inc],
                       extra_compile_args=['-std=c99', '-O3']),
             Extension(python_prefix + 'variational.solvers.eig_qr.eig_qr',
-                      sources=[ext_path_prefix + 'solvers/eig_qr/eig_qr.pyx'],
-                      include_dirs=[ext_path_prefix + '/solvers/eig_qr/', np_inc, sc_inc],
+                      sources=[path_prefix + 'solvers/eig_qr/eig_qr.pyx'],
+                      include_dirs=[path_prefix + '/solvers/eig_qr/', np_inc, sc_inc],
                       extra_compile_args=['-std=c99', '-O3'])
             ]
     if cythonize_exts:
