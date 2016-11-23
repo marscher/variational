@@ -105,6 +105,7 @@ Operating System :: Unix
 Operating System :: MacOS
 """
 
+
 ################################################################################
 # USEFUL SUBROUTINES
 ################################################################################
@@ -116,73 +117,81 @@ def find_package_data(data_root, package_root):
             files.append(relpath(join(root, fn), package_root))
     return files
 
+
 ################################################################################
 # EXTENSIONS
 ################################################################################
 
-def extensions():
+def extensions(path_prefix='./', python_prefix=''):
+    ext_path_prefix = path_prefix + python_prefix
     from numpy import get_include as np_inc
     from scipy import get_include as sc_inc
     np_inc = np_inc()
     sc_inc = sc_inc()
     from Cython.Build import cythonize
-    exts = [Extension('variational.estimators.covar_c.covartools',
-                         sources = ['./variational/estimators/covar_c/covartools.pyx',
-                                    './variational/estimators/covar_c/_covartools.c'],
-                         include_dirs = ['./variational/estimators/covar_c/', np_inc],
-                         extra_compile_args=['-std=c99','-O3']),
-            Extension('variational.solvers.eig_qr.eig_qr',
-                        sources=['./variational/solvers/eig_qr/eig_qr.pyx'],
-                        include_dirs=['./variational/solvers/eig_qr/', np_inc, sc_inc],
-                        extra_compile_args=['-std=c99','-O3'])
-               ]
+    exts = [Extension(python_prefix + 'variational.estimators.covar_c.covartools',
+                      sources=[ext_path_prefix + '/estimators/covar_c/covartools.pyx',
+                               ext_path_prefix + 'estimators/covar_c/_covartools.c'],
+                      include_dirs=[ext_path_prefix+'/estimators/covar_c/', np_inc],
+                      extra_compile_args=['-std=c99', '-O3']),
+            Extension(python_prefix + 'variational.solvers.eig_qr.eig_qr',
+                      sources=[ext_path_prefix + 'solvers/eig_qr/eig_qr.pyx'],
+                      include_dirs=[ext_path_prefix + '/solvers/eig_qr/', np_inc, sc_inc],
+                      extra_compile_args=['-std=c99', '-O3'])
+            ]
     return cythonize(exts)
 
 
 class lazy_cythonize(list):
     """evaluates extension list lazyly.
     pattern taken from http://tinyurl.com/qb8478q"""
+
     def __init__(self, callback):
         self._list, self.callback = None, callback
+
     def c_list(self):
         if self._list is None: self._list = self.callback()
         return self._list
+
     def __iter__(self):
         for e in self.c_list(): yield e
-    def __getitem__(self, ii): return self.c_list()[ii]
-    def __len__(self): return len(self.c_list())
+
+    def __getitem__(self, ii):
+        return self.c_list()[ii]
+
+    def __len__(self):
+        return len(self.c_list())
+
 
 ################################################################################
 # SETUP
 ################################################################################
 
-metadata=dict(
-    name = 'variational',
-    author = 'Frank Noe, Fabian Paul and Feliks Nueske',
-    author_email = 'frank.noe@fu-berlin.de',
-    description = DOCLINES[0],
-    long_description = "\n".join(DOCLINES[2:]),
+metadata = dict(
+    name='variational',
+    author='Frank Noe, Fabian Paul and Feliks Nueske',
+    author_email='frank.noe@fu-berlin.de',
+    description=DOCLINES[0],
+    long_description="\n".join(DOCLINES[2:]),
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     license='OpenBSD',
     url='https://github.com/markovmodel/variational',
     platforms=['Linux', 'Mac OS-X', 'Unix', 'Windows'],
     classifiers=CLASSIFIERS.splitlines(),
-    #package_dir={'variational': 'variational'},
     packages=find_packages(),
-    package_data={'variational.basisset':['ResiduesEigenvectors/*']
-                  },
     zip_safe=False,
     install_requires=[
         'numpy',
         'scipy',
         'six',
-        ],
+    ],
     setup_requires=[
         'cython>=0.24',
         'numpy',
-        ],
+    ],
     ext_modules=lazy_cythonize(extensions),
-    )
+)
 
-setup(**metadata)
+if __name__ == '__main__':
+    setup(**metadata)
