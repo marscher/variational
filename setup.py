@@ -122,7 +122,7 @@ def find_package_data(data_root, package_root):
 # EXTENSIONS
 ################################################################################
 
-def extensions(path_prefix='./', python_prefix='', cythonize_exts=True):
+def extensions(path_prefix='./variational', python_prefix='', cythonize_exts=True):
     from numpy import get_include as np_inc
     from scipy import get_include as sc_inc
     np_inc = np_inc()
